@@ -8,11 +8,11 @@ all: BSTSanityCheck CreateData
 CreateData: CreateData.cxx json.hpp
 	$(CC) $(OPT) CreateData.cxx -o CreateData.exe
 
-BSTSanityCheck: BSTSanityCheck.cxx BST.o
-	$(CC) $(DEV) BSTSanityCheck.cxx BST.o -o BSTSanityCheck.exe
+BSTSanityCheck: BSTSanityCheck.cxx AVL.o
+	$(CC) $(DEV) BSTSanityCheck.cxx AVL.o -o BSTSanityCheck.exe
 
-BST.o: BST.cpp BST.h
-	$(CC) $(DEV) -c BST.cpp
+AVL.o: AVL.cpp AVL.h
+	$(CC) $(DEV) -c AVL.cpp
 
 # Build
 .PHONY: clean

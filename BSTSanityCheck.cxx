@@ -4,7 +4,7 @@
 #include <random>
 #include <vector>
 
-#include "BST.h"
+#include "AVL.h"
 
 #define SAMPLE_SIZE 1000
 #define NUM_TESTS 10000
@@ -24,7 +24,7 @@ int main() {
 	BSTSortedData.reserve(SAMPLE_SIZE);
 	std::cout << "Running tests..." << std::flush;
 	for (unsigned int sample = 0; sample < NUM_TESTS; sample++) {
-		BST T;
+		AVLTree T;
 		// On size_t usage here: https://stackoverflow.com/questions/131803/unsigned-int-vs-size-t
 		for (size_t i = 0; i < SAMPLE_SIZE; i++) {
 			if (op(rng) == 0 && !T.empty()) {
