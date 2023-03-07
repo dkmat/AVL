@@ -14,13 +14,15 @@ class BSTNode {
  	bool HasRightChild() const;
  	void DeleteChild(std::shared_ptr<BSTNode> v);
  	void ReplaceChild(std::shared_ptr<BSTNode> v, std::shared_ptr<BSTNode> u);
-
+	int height(std::shared_ptr<BSTNode> node);
+	void balance ();
  private:
-  int key_;
-  std::weak_ptr<BSTNode> parent_;
-  std::shared_ptr<BSTNode> left_;
-  std::shared_ptr<BSTNode> right_;
-  int bf_;
+  	int key_;
+  	std::weak_ptr<BSTNode> parent_;
+  	std::shared_ptr<BSTNode> left_;
+  	std::shared_ptr<BSTNode> right_;
+  	int bf_;
+  	int height_;
 
   friend AVLTree;
 }; // class BSTNode

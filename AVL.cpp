@@ -64,7 +64,6 @@ AVLTree::AVLTree() : root_(nullptr), size_(0) {}
 void AVLTree::Insert(int key) {
 	if (root_ == nullptr) {
 		root_ = std::make_shared<BSTNode>(key);
-		root_->bf_=0;
 		size_++;
 		return;
 	}
@@ -76,10 +75,9 @@ void AVLTree::Insert(int key) {
 	}
 	if (key < lastNode->key_) {
 		lastNode->left_ = std::make_shared<BSTNode>(key, lastNode);
-		lastNode->bf_ = lastNode->bf_ - 1;
+		
 	} else {
 		lastNode->right_ = std::make_shared<BSTNode>(key, lastNode);
-		lastNode->bf_ = lastNode->bf_ + 1;
 	}
 	size_++;
 }
@@ -224,4 +222,19 @@ void AVLTree::readFile(const std::string &fileName){
 
 void AVLTree::parseFile(nlohmann::json &fileInfo){
 	
+}
+
+int BSTNode::height(std::shared_ptr<BSTNode> node){
+	if(node == nullptr){ // empty tree
+		return 0;
+	}
+	int l_height = height(node->left_);
+	int r_height = height(node->right_);
+	if(l_height == 0 && r_height == 0){
+		node->height_ = 0;
+		return 0;
+	}
+	node->height_ = std::max(l_height,r_height)+1;
+	node->bf_ = r_height - l_height;
+	return node->height_;
 }
