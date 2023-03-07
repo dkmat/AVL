@@ -210,3 +210,18 @@ std::string AVLTree::JSON() const {
 	result["size"] = size_;
 	return result.dump(2) + "\n";
 }
+
+void AVLTree::readFile(const std::string &fileName){
+	std::ifstream file; // creating a file variable to open the file
+    file.open(fileName); // opening the file
+    nlohmann::json fileInfo; // creating a JSON object
+    if(file.is_open()){ // checking if file is open
+        file>>fileInfo; // entering file data into the JSON object
+    }
+    file.close(); // closing the file
+    parseFile(fileInfo);
+}
+
+void AVLTree::parseFile(nlohmann::json &fileInfo){
+	
+}

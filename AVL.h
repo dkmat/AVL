@@ -1,6 +1,7 @@
 #include <memory>
 #include <string>
-
+#include "json.hpp"
+#include <fstream>
 class AVLTree;
 
 class BSTNode {
@@ -27,7 +28,8 @@ class BSTNode {
 class AVLTree {
  public:
  	AVLTree();
-
+	void readFile(const std::string &fileName);
+	void parseFile(nlohmann::json &fileInfo);
  	void Insert(int key);
  	bool Delete(int key);
  	bool Find(int key) const;
