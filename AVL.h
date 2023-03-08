@@ -14,8 +14,6 @@ class BSTNode {
  	bool HasRightChild() const;
  	void DeleteChild(std::shared_ptr<BSTNode> v);
  	void ReplaceChild(std::shared_ptr<BSTNode> v, std::shared_ptr<BSTNode> u);
-	int height(std::shared_ptr<BSTNode> node);
-	void balance ();
  private:
   	int key_;
   	std::weak_ptr<BSTNode> parent_;
@@ -33,6 +31,12 @@ class AVLTree {
 	void readFile(const std::string &fileName);
 	void parseFile(nlohmann::json &fileInfo);
  	void Insert(int key);
+	int height(std::shared_ptr<BSTNode> node);
+	void balance (std::shared_ptr<BSTNode> node);
+	void LLrotation(std::shared_ptr<BSTNode> node);
+	void RRrotation(std::shared_ptr<BSTNode> node);
+	void RLrotation(std::shared_ptr<BSTNode> node);
+	void LRrotation(std::shared_ptr<BSTNode> node);
  	bool Delete(int key);
  	bool Find(int key) const;
  	std::string JSON() const;

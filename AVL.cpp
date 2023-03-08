@@ -61,26 +61,7 @@ void BSTNode::ReplaceChild(std::shared_ptr<BSTNode> v, std::shared_ptr<BSTNode> 
 
 AVLTree::AVLTree() : root_(nullptr), size_(0) {}
 
-void AVLTree::Insert(int key) {
-	if (root_ == nullptr) {
-		root_ = std::make_shared<BSTNode>(key);
-		size_++;
-		return;
-	}
-	std::shared_ptr<BSTNode> currentNode = root_, lastNode = nullptr;
-	while (currentNode != nullptr) {
-		lastNode = currentNode;
-		currentNode = (key < currentNode->key_) ?
-			currentNode->left_ : currentNode->right_;
-	}
-	if (key < lastNode->key_) {
-		lastNode->left_ = std::make_shared<BSTNode>(key, lastNode);
-		
-	} else {
-		lastNode->right_ = std::make_shared<BSTNode>(key, lastNode);
-	}
-	size_++;
-}
+
 
 bool AVLTree::Delete(int key) {
 	std::shared_ptr<BSTNode> currentNode = root_;
@@ -221,20 +202,73 @@ void AVLTree::readFile(const std::string &fileName){
 }
 
 void AVLTree::parseFile(nlohmann::json &fileInfo){
-	
+	int num = fileInfo["metadata"]["numOps"];
+	for(int i =0; i<num; i++){
+		Insert(fileInfo[std::to_string(i)]);
+	}
 }
 
-int BSTNode::height(std::shared_ptr<BSTNode> node){
+void AVLTree::Insert(int key) {
+	if (root_ == nullptr) {
+		root_ = std::make_shared<BSTNode>(key);
+		size_++;
+		return;
+	}
+	std::shared_ptr<BSTNode> currentNode = root_, lastNode = nullptr;
+	while (currentNode != nullptr) {
+		lastNode = currentNode;
+		currentNode = (key < currentNode->key_) ?
+			currentNode->left_ : currentNode->right_;
+	}
+	if (key < lastNode->key_) {
+		lastNode->left_ = std::make_shared<BSTNode>(key, lastNode);
+		lastNode->left_->parent_ = lastNode;
+	} else if(key>lastNode->key_) {
+		lastNode->right_ = std::make_shared<BSTNode>(key, lastNode);
+		lastNode->right_->parent_ = lastNode;
+	}else{}//do nothing
+	size_++;
+	root_->height_ = height(root_);
+}
+
+int AVLTree::height(std::shared_ptr<BSTNode> node){
 	if(node == nullptr){ // empty tree
 		return 0;
 	}
 	int l_height = height(node->left_);
 	int r_height = height(node->right_);
-	if(l_height == 0 && r_height == 0){
+	if(l_height == 0 && r_height == 0){ // leaf of the tree
 		node->height_ = 0;
+		node->bf_ = 0;
 		return 0;
 	}
-	node->height_ = std::max(l_height,r_height)+1;
 	node->bf_ = r_height - l_height;
+	if(node->bf_>=-1 && node->bf_<=1){
+		node->height_ = std::max(l_height,r_height)+1;
+	}
+	else{
+		balance(node);
+	}
 	return node->height_;
+}
+
+void AVLTree::balance(std::shared_ptr<BSTNode> node){
+	if(node->bf_<-1){
+		if(node->left_->bf_==-1){
+			RRrotation(node);//LL problem RR rotation
+		}else {
+			RLrotation(node);//LR problem RL rotation
+		}
+	}else{
+		if(node->right_->bf_==1){
+			LLrotation(node);//RR problem LL rotation
+		}else{
+			LRrotation(node);//RL problem LR rotation
+		}
+	}
+}
+
+void AVLTree::RRrotation(std::shared_ptr<BSTNode> node){
+	std::shared_ptr<BSTNode> temp = node->left_->right_;
+	node->left_->right_ = node->left_->parent_.lock();
 }
