@@ -241,7 +241,7 @@ void AVLTree::Insert(int key) {
 
 int AVLTree::height(std::shared_ptr<BSTNode> node){
 	if(node == nullptr){ // empty tree
-		return -1;
+		return 0;
 	}
 	if(node->IsLeaf()){ // leaf of the tree
 		node->height_ = 0;
@@ -259,7 +259,7 @@ int AVLTree::height(std::shared_ptr<BSTNode> node){
 	} else {
 		node->bf_ = node->height_ - l_height;
 	}
-	//std::cout<<node->bf_<<std::endl;
+	std::cout<<node->bf_<<std::endl;
 	if(abs(node->bf_) > 1) {
 		balance(node);
 	}
@@ -293,13 +293,9 @@ void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 	std::shared_ptr<BSTNode> T2 =  x->right_;
 	x->right_ = node;
 	node->left_ = T2;
-	if(!node->parent_.expired()){
-		x->parent_.lock() = node->parent_.lock();
-	}
-	T2->parent_.lock() = node;
+	std::cout<<"reached rotate\n";
 
 	height(root_);
-
 }
 
 void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
