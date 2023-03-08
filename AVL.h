@@ -33,8 +33,8 @@ class AVLTree {
  	void Insert(int key);
 	int height(std::shared_ptr<BSTNode> node);
 	void balance (std::shared_ptr<BSTNode> node);
-	void LLrotation(std::shared_ptr<BSTNode> node);
-	void RRrotation(std::shared_ptr<BSTNode> node);
+	void Lrotation(std::shared_ptr<BSTNode> node);
+	void Rrotation(std::shared_ptr<BSTNode> node);
 	void RLrotation(std::shared_ptr<BSTNode> node);
 	void LRrotation(std::shared_ptr<BSTNode> node);
  	bool Delete(int key);

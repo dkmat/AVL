@@ -232,71 +232,104 @@ void AVLTree::Insert(int key) {
 	} else if(key>lastNode->key_) {
 		lastNode->right_ = std::make_shared<BSTNode>(key, lastNode);
 		lastNode->right_->parent_ = lastNode;
-	}else{}//do nothing
+	}else{
+		size_--;
+	}
 	size_++;
-	lastNode->height_ = height(lastNode);
+	height(root_);
 }
 
 int AVLTree::height(std::shared_ptr<BSTNode> node){
 	if(node == nullptr){ // empty tree
-		return 0;
+		return -1;
 	}
-	int l_height = height(node->left_);
-	int r_height = height(node->right_);
-	if(l_height == 0 && r_height == 0){ // leaf of the tree
+	if(node->IsLeaf()){ // leaf of the tree
 		node->height_ = 0;
 		node->bf_ = 0;
 		return 0;
 	}
-	node->bf_ = r_height - l_height;
-	if(node->bf_>=-1 && node->bf_<=1){
-		node->height_ = std::max(l_height,r_height)+1;
+	int l_height = height(node->left_);
+	int r_height = height(node->right_);
+	node->height_ = std::max(l_height,r_height)+1;
+	if(l_height == r_height){
+		node->bf_ = 0;
 	}
-	else{
+	else if(std::max(l_height,r_height) == l_height) {
+		node->bf_ = r_height - node->left_->height_;
+	} else {
+		node->bf_ = node->height_ - l_height;
+	}
+	//std::cout<<node->bf_<<std::endl;
+	if(abs(node->bf_) > 1) {
 		balance(node);
-		node->height_ = std::max(height(node->left_),height(node->right_))+1;
 	}
+	//std::cout<<"In height\n";
 	return node->height_;
 }
 
 void AVLTree::balance(std::shared_ptr<BSTNode> node){
-	if(node->bf_<-1){
-		if(node->left_->bf_==-1){
-			RRrotation(node);//LL problem RR rotation
+	std::cout<<"inbalance\n";
+	if(node->bf_<0){
+		if(node->left_->bf_<=-1){
+			std::cout<<"R\n";
+			Rrotation(node);//LL problem RR rotation
 		}else {
+			std::cout<<"RL\n";
 			RLrotation(node);//LR problem RL rotation
 		}
 	}else{
-		if(node->right_->bf_==1){
-			LLrotation(node);//RR problem LL rotation
+		if(node->right_->bf_>=1){
+			std::cout<<"L\n";
+			Lrotation(node);//RR problem LL rotation
 		}else{
+			std::cout<<"LR\n";
 			LRrotation(node);//RL problem LR rotation
 		}
 	}
 }
 
-void AVLTree::RRrotation(std::shared_ptr<BSTNode> node){
-	std::shared_ptr<BSTNode> temp = node->left_->right_;
-	node->left_->right_ = node->left_->parent_.lock();
-	node->left_->parent_ = node->parent_;
-	node->parent_ = node->left_;
-	node->left_ = temp;
+void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
+	std::shared_ptr<BSTNode> x = node->left_;
+	std::shared_ptr<BSTNode> T2 = x->right_;
+	if(node->parent_.lock()==nullptr){
+		x->parent_.reset();
+	}
+	else{
+		x->parent_ = node->parent_;
+	}
+	x->right_ = node; 
+	node->left_ = T2;
+	T2->parent_ = node;
+
+
+	height(root_);
+
 }
 
-void AVLTree::LLrotation(std::shared_ptr<BSTNode> node){
-	std::shared_ptr<BSTNode> temp = node->right_->left_;
+void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
+	std::shared_ptr<BSTNode> y = node->right_;
+	std::shared_ptr<BSTNode> T2 = y->left_;
+
+	y->parent_ = node->parent_;
+	y->left_ = node;
+	node->parent_ = y;
+	node->right_ = T2;
+	T2->parent_ = node;
+	
+	height(root_);
+	/*std::shared_ptr<BSTNode> temp = node->right_->left_;
 	node->right_->left_ = node->right_->parent_.lock();
 	node->right_->parent_ = node->parent_;
 	node->parent_ = node->right_;
-	node->right_ = temp;
+	node->right_ = temp;*/
 }
 
 void AVLTree::RLrotation(std::shared_ptr<BSTNode> node){
-	LLrotation(node->left_);
-	RRrotation(node);
+	Lrotation(node->left_);
+	Rrotation(node);
 }
 
 void AVLTree::LRrotation(std::shared_ptr<BSTNode> node){
-	RRrotation(node->right_);
-	LLrotation(node);
+	Rrotation(node->right_);
+	Lrotation(node);
 }
