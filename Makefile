@@ -3,16 +3,16 @@ DEV=-Wall -g -std=c++14
 OPT=-O3 -std=c++14
 
 .PHONY: all
-all: BSTSanityCheck CreateData
+all: BSTSanityCheck CreateData 
 
 CreateData: CreateData.cxx json.hpp
 	$(CC) $(OPT) CreateData.cxx -o CreateData.exe
 
-BSTSanityCheck: BSTSanityCheck.cxx AVL.o
-	$(CC) $(DEV) BSTSanityCheck.cxx AVL.o -o BSTSanityCheck.exe
+BSTSanityCheck: BSTSanityCheck.cxx AVLCommands.cxx AVL.o
+	$(CC) $(DEV) BSTSanityCheck.cxx AVLCommands.cxx AVL.o -o BSTSanityCheck.exe
 
 AVL.o: AVL.cpp AVL.h
-	$(CC) $(DEV) -c AVL.cpp
+	$(CC) $(DEV) -c AVL.cpp AVL.h
 
 # Build
 .PHONY: clean

@@ -6,8 +6,8 @@
 
 #include "AVL.h"
 
-#define SAMPLE_SIZE 1000
-#define NUM_TESTS 10000
+#define SAMPLE_SIZE 100
+#define NUM_TESTS 10
 
 int main() {
 

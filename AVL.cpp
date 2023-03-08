@@ -172,6 +172,8 @@ std::string AVLTree::JSON()const  {
 			auto v = nodes.front();
 			nodes.pop();
 			std::string key = std::to_string(v->key_);
+			result[key]["balance factor"] = v->bf_;
+			result[key]["height"] = v->height_;
 			if (v->left_ != nullptr) {
 				result[key]["left"] = v->left_->key_;
 				nodes.push(v->left_);
@@ -185,7 +187,6 @@ std::string AVLTree::JSON()const  {
 			} else {
 				result[key]["root"] = true;
 			}
-			result[key]["balance factor"] = v->bf_;
 		}
 	}
 	result["size"] = size_;
@@ -205,11 +206,12 @@ void AVLTree::readFile(const std::string &fileName){
 
 void AVLTree::parseFile(nlohmann::json &fileInfo){
 	int num = fileInfo["metadata"]["numOps"];
-	for(int i =0; i<num; i++){
+	for(int i =1; i<=num; i++){
 		if(fileInfo[std::to_string(i)]["operation"]=="Insert"){
 			Insert(fileInfo[std::to_string(i)]["key"]);
 		}
 	}
+	std::cout<< JSON();
 }
 
 void AVLTree::Insert(int key) {
@@ -232,7 +234,7 @@ void AVLTree::Insert(int key) {
 		lastNode->right_->parent_ = lastNode;
 	}else{}//do nothing
 	size_++;
-	root_->height_ = height(root_);
+	lastNode->height_ = height(lastNode);
 }
 
 int AVLTree::height(std::shared_ptr<BSTNode> node){
