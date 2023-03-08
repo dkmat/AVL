@@ -161,11 +161,12 @@ bool AVLTree::Find(int key) const {
 	return false;
 }
 
-std::string AVLTree::JSON() const {
+std::string AVLTree::JSON()const  {
 	nlohmann::json result;
 	std::queue< std::shared_ptr<BSTNode> > nodes;
 	if (root_ != nullptr) {
 		result["root"] = root_->key_;
+		result["height"] = root_->height_;
 		nodes.push(root_);
 		while (!nodes.empty()) {
 			auto v = nodes.front();
@@ -184,6 +185,7 @@ std::string AVLTree::JSON() const {
 			} else {
 				result[key]["root"] = true;
 			}
+			result[key]["balance factor"] = v->bf_;
 		}
 	}
 	result["size"] = size_;
@@ -204,7 +206,9 @@ void AVLTree::readFile(const std::string &fileName){
 void AVLTree::parseFile(nlohmann::json &fileInfo){
 	int num = fileInfo["metadata"]["numOps"];
 	for(int i =0; i<num; i++){
-		Insert(fileInfo[std::to_string(i)]);
+		if(fileInfo[std::to_string(i)]["operation"]=="Insert"){
+			Insert(fileInfo[std::to_string(i)]["key"]);
+		}
 	}
 }
 
@@ -248,6 +252,7 @@ int AVLTree::height(std::shared_ptr<BSTNode> node){
 	}
 	else{
 		balance(node);
+		node->height_ = std::max(height(node->left_),height(node->right_))+1;
 	}
 	return node->height_;
 }
@@ -271,4 +276,25 @@ void AVLTree::balance(std::shared_ptr<BSTNode> node){
 void AVLTree::RRrotation(std::shared_ptr<BSTNode> node){
 	std::shared_ptr<BSTNode> temp = node->left_->right_;
 	node->left_->right_ = node->left_->parent_.lock();
+	node->left_->parent_ = node->parent_;
+	node->parent_ = node->left_;
+	node->left_ = temp;
+}
+
+void AVLTree::LLrotation(std::shared_ptr<BSTNode> node){
+	std::shared_ptr<BSTNode> temp = node->right_->left_;
+	node->right_->left_ = node->right_->parent_.lock();
+	node->right_->parent_ = node->parent_;
+	node->parent_ = node->right_;
+	node->right_ = temp;
+}
+
+void AVLTree::RLrotation(std::shared_ptr<BSTNode> node){
+	LLrotation(node->left_);
+	RRrotation(node);
+}
+
+void AVLTree::LRrotation(std::shared_ptr<BSTNode> node){
+	RRrotation(node->right_);
+	LLrotation(node);
 }

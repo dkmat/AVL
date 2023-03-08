@@ -39,7 +39,7 @@ class AVLTree {
 	void LRrotation(std::shared_ptr<BSTNode> node);
  	bool Delete(int key);
  	bool Find(int key) const;
- 	std::string JSON() const;
+ 	std::string JSON()const;
  	size_t size() const;
  	bool empty() const;
  	int DeleteMin();
