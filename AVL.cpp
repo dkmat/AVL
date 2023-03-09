@@ -255,7 +255,7 @@ int AVLTree::height(std::shared_ptr<BSTNode> node){
 		node->bf_ = 0;
 	}
 	else if(std::max(l_height,r_height) == l_height) {
-		node->bf_ = r_height - node->left_->height_;
+		node->bf_ = r_height - node->height_;
 	} else {
 		node->bf_ = node->height_ - l_height;
 	}
@@ -277,7 +277,7 @@ void AVLTree::balance(std::shared_ptr<BSTNode> node){
 			std::cout<<"RL\n";
 			RLrotation(node);//LR problem RL rotation
 		}
-	}else{
+	}else if(node->bf_>0){
 		if(node->right_->bf_>=1){
 			std::cout<<"L\n";
 			Lrotation(node);//RR problem LL rotation
@@ -292,7 +292,10 @@ void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 	std::shared_ptr<BSTNode> x =  node->left_;
 	std::shared_ptr<BSTNode> T2 =  x->right_;
 	x->right_ = node;
+	node->parent_ = x;
+	x->parent_ = node->parent_.lock();
 	node->left_ = T2;
+	T2 ->parent_ = node;
 	std::cout<<"reached rotate\n";
 
 	height(root_);
@@ -302,8 +305,9 @@ void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 	std::shared_ptr<BSTNode> y = node->right_;
 	std::shared_ptr<BSTNode> T2 = y->left_;
 
-	y->parent_ = node->parent_;
+	
 	y->left_ = node;
+	y->parent_ = node->parent_.lock();
 	node->parent_ = y;
 	node->right_ = T2;
 	T2->parent_ = node;
