@@ -9,7 +9,7 @@ class BSTNode {
  	BSTNode(int key);
  	BSTNode(int key, std::weak_ptr<BSTNode> parent);
  	bool IsLeaf() const;
- 	bool IsMissingChild() const;
+ 	//bool IsMissingChild() const;
  	bool HasLeftChild() const;
  	bool HasRightChild() const;
  	void DeleteChild(std::shared_ptr<BSTNode> v);

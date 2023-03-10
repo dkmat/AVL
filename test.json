@@ -1,18 +1,18 @@
 {
   "1": {
-    "key": 3,
-    "operation": "Insert"
-  },
-  "2": {
-    "key": 5,
-    "operation": "Insert"
-  },
-  "3": {
     "key": 1,
     "operation": "Insert"
   },
+  "2": {
+    "key": 2,
+    "operation": "Insert"
+  },
+  "3": {
+    "key": 3,
+    "operation": "Insert"
+  },
   "4": {
-    "key": 100,
+    "key": 4,
     "operation": "Insert"
   },
   "metadata": {
