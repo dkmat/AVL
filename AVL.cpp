@@ -238,6 +238,7 @@ void AVLTree::parseFile(nlohmann::json &fileInfo){
 }
 
 void AVLTree::Insert(int key) {
+	//std::cout<<"insert\n";
 	if (root_ == nullptr) {
 		root_ = std::make_shared<BSTNode>(key);
 		size_++;
@@ -319,9 +320,9 @@ void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 	}
 	x->right_ = node;
 	node->left_ = T2;
-	if(node->key_==root_->key_){
-		root_ = x;
+	if(node->parent_.lock()==nullptr){//node->key_==root_->key_
 		x->parent_.reset();
+		root_ = x;
 	}
 	else{
 		x->parent_ = node->parent_;
@@ -334,7 +335,7 @@ void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 	}
 	node->parent_ = x;
 	//std::cout<<"right\n";
-	height(root_);
+	height(x);
 }
 
 void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
@@ -348,9 +349,9 @@ void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 	}
 	y->left_ = node;
 	node->right_ = T2;
-	if(node->key_==root_->key_){
-		root_ = y;
+	if(node->parent_.lock()==nullptr){//node->key_==root_->key_
 		y->parent_.reset();
+		root_ = y;
 	}
 	else{
 		y->parent_ = node->parent_;
@@ -363,16 +364,15 @@ void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 	}
 	node->parent_ = y;
 	//std::cout<<"left\n";
-	height(root_);
-
+	height(y);
 }
 
 void AVLTree::RLrotation(std::shared_ptr<BSTNode> node){
 	Lrotation(node->left_);
-	//Rrotation(node);
+	Rrotation(node);
 }
 
 void AVLTree::LRrotation(std::shared_ptr<BSTNode> node){
 	Rrotation(node->right_);
-	//Lrotation(node);
+	Lrotation(node);
 }
