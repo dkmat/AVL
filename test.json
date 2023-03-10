@@ -4,18 +4,15 @@
     "operation": "Insert"
   },
   "2": {
-    "key": 2,
+    "key": 7,
     "operation": "Insert"
   },
   "3": {
     "key": 3,
     "operation": "Insert"
   },
-  "4": {
-    "key": 4,
-    "operation": "Insert"
-  },
+
   "metadata": {
-    "numOps": 4
+    "numOps": 3
   }
 }

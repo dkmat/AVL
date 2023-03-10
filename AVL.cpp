@@ -287,28 +287,38 @@ void AVLTree::balance(std::shared_ptr<BSTNode> node){
 
 void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 	std::shared_ptr<BSTNode> x = node->left_;
-	node->left_->left_->parent_ = x;
+	if(node->left_->HasLeftChild()){
+		node->left_->left_->parent_ = x;
+	}
 	std::shared_ptr<BSTNode> T2 = x->right_;
 	if(x->HasRightChild()){
 		T2->parent_ = node;
 	}
 	x->right_ = node;
 	node->left_ = T2;
-	std::cout<<"no problem\n";
 	if(node->key_==root_->key_){
 		root_ = x;
 		x->parent_.reset();
 	}
 	else{
 		x->parent_ = node->parent_;
+		if(node->parent_.lock()->right_==node){
+			node->parent_.lock()->right_ = x;
+		}
+		else{
+			node->parent_.lock()->left_ = x;
+		}
 	}
 	node->parent_ = x;
+	std::cout<<"right\n";
 	height(root_);
 }
 
 void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 	std::shared_ptr<BSTNode> y = node->right_;
-	node->right_->right_->parent_ = y;
+	if(node->right_->HasRightChild()){
+		node->right_->right_->parent_ = y;
+	}
 	std::shared_ptr<BSTNode> T2 = y->left_;
 	if(y->HasLeftChild()){
 		T2->parent_=node;
@@ -321,18 +331,25 @@ void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 	}
 	else{
 		y->parent_ = node->parent_;
+		if(node->parent_.lock()->right_==node){
+			node->parent_.lock()->right_ = y;
+		}
+		else{
+			node->parent_.lock()->left_ = y;
+		}
 	}
 	node->parent_ = y;
+	std::cout<<"left\n";
 	height(root_);
 
 }
 
 void AVLTree::RLrotation(std::shared_ptr<BSTNode> node){
 	Lrotation(node->left_);
-	Rrotation(node);
+	//Rrotation(node);
 }
 
 void AVLTree::LRrotation(std::shared_ptr<BSTNode> node){
 	Rrotation(node->right_);
-	Lrotation(node);
+	//Lrotation(node);
 }
