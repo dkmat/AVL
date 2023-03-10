@@ -206,9 +206,32 @@ void AVLTree::readFile(const std::string &fileName){
 
 void AVLTree::parseFile(nlohmann::json &fileInfo){
 	int num = fileInfo["metadata"]["numOps"];
+	std::string temp;
 	for(int i =1; i<=num; i++){
-		if(fileInfo[std::to_string(i)]["operation"]=="Insert"){
-			Insert(fileInfo[std::to_string(i)]["key"]);
+		if(num<=99){
+			if(i<10){
+				temp = "0"+std::to_string(i);
+			}
+			else{
+				temp = std::to_string(i);
+			}
+		}
+		else if(num<=1000){
+			if(i<10){
+				temp = "000"+std::to_string(i);
+			}
+			else if(i<100){
+				temp = "00"+std::to_string(i);
+			}
+			else if(i<1000){
+				temp = "0"+std::to_string(i);
+			}
+			else{
+				temp = std::to_string(i);
+			}
+		}
+		if(fileInfo[temp]["operation"]=="Insert"){
+			Insert(fileInfo[temp]["key"]);
 		}
 	}
 	std::cout<< JSON(); //printing out the output to the screen
