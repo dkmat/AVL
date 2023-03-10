@@ -8,8 +8,8 @@ all: BSTSanityCheck CreateData AVLCommands
 CreateData: CreateData.cxx json.hpp
 	$(CC) $(OPT) CreateData.cxx -o CreateData.exe
 
-BSTSanityCheck: BSTSanityCheck.cxx AVLCommands.cxx AVL.o
-	$(CC) $(DEV) BSTSanityCheck.cxx AVLCommands.cxx AVL.o -o BSTSanityCheck.exe
+BSTSanityCheck: BSTSanityCheck.cxx  AVL.o
+	$(CC) $(DEV) BSTSanityCheck.cxx  AVL.o -o BSTSanityCheck.exe
 
 AVLCommands: AVLCommands.cxx AVL.o
 	$(CC) $(DEV) AVLCommands.cxx AVL.o -o AVLCommands.exe
