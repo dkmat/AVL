@@ -211,7 +211,7 @@ void AVLTree::parseFile(nlohmann::json &fileInfo){
 			Insert(fileInfo[std::to_string(i)]["key"]);
 		}
 	}
-	std::cout<< JSON();
+	std::cout<< JSON(); //printing out the output to the screen
 }
 
 void AVLTree::Insert(int key) {
@@ -265,21 +265,21 @@ int AVLTree::height(std::shared_ptr<BSTNode> node){
 }
 
 void AVLTree::balance(std::shared_ptr<BSTNode> node){
-	std::cout<<"imbalance\n";
+	//std::cout<<"imbalance\n";
 	if(node->bf_<0){
 		if(node->left_->bf_<=0){
-			std::cout<<"R\n";
+			//std::cout<<"R\n";
 			Rrotation(node);//LL problem RR rotation
 		}else {
-			std::cout<<"RL\n";
+			//std::cout<<"RL\n";
 			RLrotation(node);//LR problem RL rotation
 		}
 	}else if(node->bf_>0){
 		if(node->right_->bf_>=0){
-			std::cout<<"L\n";
+			//std::cout<<"L\n";
 			Lrotation(node);//RR problem LL rotation
 		}else{
-			std::cout<<"LR\n";
+			//std::cout<<"LR\n";
 			LRrotation(node);//RL problem LR rotation
 		}
 	}
@@ -310,7 +310,7 @@ void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 		}
 	}
 	node->parent_ = x;
-	std::cout<<"right\n";
+	//std::cout<<"right\n";
 	height(root_);
 }
 
@@ -339,7 +339,7 @@ void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 		}
 	}
 	node->parent_ = y;
-	std::cout<<"left\n";
+	//std::cout<<"left\n";
 	height(root_);
 
 }
