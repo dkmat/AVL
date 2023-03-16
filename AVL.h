@@ -19,8 +19,8 @@ class BSTNode {
   	std::weak_ptr<BSTNode> parent_;
   	std::shared_ptr<BSTNode> left_;
   	std::shared_ptr<BSTNode> right_;
-  	int bf_;
-  	int height_;
+  	int bf_; //keeping track of balance factor
+  	int height_; //keeping track of height
 
   friend AVLTree;
 }; // class BSTNode

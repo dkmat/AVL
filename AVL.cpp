@@ -205,8 +205,8 @@ void AVLTree::readFile(const std::string &fileName){
 }
 
 void AVLTree::parseFile(nlohmann::json &fileInfo){
-	int num = fileInfo["metadata"]["numOps"];
-	std::string temp;
+	int num = fileInfo["metadata"]["numOps"]; //getting the correct number of operations
+	std::string temp; // string to access each operation
 	for(int i =1; i<=num; i++){
 		if(num<=99){
 			if(i<10){
@@ -230,14 +230,14 @@ void AVLTree::parseFile(nlohmann::json &fileInfo){
 				temp = std::to_string(i);
 			}
 		}
-		if(fileInfo[temp]["operation"]=="Insert"){
+		if(fileInfo[temp]["operation"]=="Insert"){ //checking the operation is insert
 			Insert(fileInfo[temp]["key"]);
 		}
 	}
 	std::cout<< JSON(); //printing out the output to the screen
 }
 
-void AVLTree::Insert(int key) {
+void AVLTree::Insert(int key) { // function to insert to the AVL tree
 	//std::cout<<"insert\n";
 	if (root_ == nullptr) {
 		root_ = std::make_shared<BSTNode>(key);
@@ -258,7 +258,7 @@ void AVLTree::Insert(int key) {
 		size_--;
 	}
 	size_++;
-	height(root_);
+	height(root_); //calling function from root to make sure everything is updated
 }
 
 int AVLTree::height(std::shared_ptr<BSTNode> node){
@@ -270,22 +270,22 @@ int AVLTree::height(std::shared_ptr<BSTNode> node){
 		node->bf_ = 0;
 		return 0;
 	}
-	int l_height = height(node->left_);
-	int r_height = height(node->right_);
-	node->height_ = std::max(l_height,r_height)+1;
-	if(l_height == r_height){
+	int l_height = height(node->left_); //recursive call to check left node height
+	int r_height = height(node->right_); //recursive call to check right node height
+	node->height_ = std::max(l_height,r_height)+1; //getting correct height for current node
+	if(l_height == r_height){ //making sure we have balance factor 0 for equal heights
 		node->bf_ = 0;
 	}
 	/*else if(std::max(l_height,r_height) == l_height) {
 		node->bf_ = r_height - l_height;
 	}*/ else {
-		node->bf_ = r_height - l_height;
+		node->bf_ = r_height - l_height; //balance factor is always right - left if unequal heights
 	}
 	//std::cout<<node->key_<<" "<<node->bf_<<std::endl;
-	if(abs(node->bf_) > 1) {
-		balance(node);
+	if(abs(node->bf_) > 1) { //checking if node is imbalanced
+		balance(node); //balancing the tree from the current node
 	}
-	return node->height_;
+	return node->height_; // returning correct height
 }
 
 void AVLTree::balance(std::shared_ptr<BSTNode> node){
@@ -309,24 +309,24 @@ void AVLTree::balance(std::shared_ptr<BSTNode> node){
 	}
 }
 
-void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
-	std::shared_ptr<BSTNode> x = node->left_;
-	if(node->left_->HasLeftChild()){
+void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){ //right rotation
+	std::shared_ptr<BSTNode> x = node->left_; // setting left side to not lose it
+	if(node->left_->HasLeftChild()){ //checking if left has a child so we don't dereference null pointer
 		node->left_->left_->parent_ = x;
 	}
 	std::shared_ptr<BSTNode> T2 = x->right_;
-	if(x->HasRightChild()){
+	if(x->HasRightChild()){ //checking if right has child so we don't dereference null pointer
 		T2->parent_ = node;
 	}
-	x->right_ = node;
-	node->left_ = T2;
-	if(node->parent_.lock()==nullptr){//node->key_==root_->key_
+	x->right_ = node; //doing the correct right rotation
+	node->left_ = T2; //setting the correct child
+	if(node->parent_.lock()==nullptr){//checking if node is the root
 		x->parent_.reset();
-		root_ = x;
+		root_ = x; //setting new root
 	}
 	else{
-		x->parent_ = node->parent_;
-		if(node->parent_.lock()->right_==node){
+		x->parent_ = node->parent_; //new parent because node is not root
+		if(node->parent_.lock()->right_==node){//checking for correct child of parent
 			node->parent_.lock()->right_ = x;
 		}
 		else{
@@ -335,10 +335,10 @@ void AVLTree::Rrotation(std::shared_ptr<BSTNode> node){
 	}
 	node->parent_ = x;
 	//std::cout<<"right\n";
-	height(x);
+	height(x); //calling height to rebalance after rotation
 }
 
-void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
+void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){ //same as right rotation but everything is opposite
 	std::shared_ptr<BSTNode> y = node->right_;
 	if(node->right_->HasRightChild()){
 		node->right_->right_->parent_ = y;
@@ -349,7 +349,7 @@ void AVLTree::Lrotation(std::shared_ptr<BSTNode> node){
 	}
 	y->left_ = node;
 	node->right_ = T2;
-	if(node->parent_.lock()==nullptr){//node->key_==root_->key_
+	if(node->parent_.lock()==nullptr){
 		y->parent_.reset();
 		root_ = y;
 	}
